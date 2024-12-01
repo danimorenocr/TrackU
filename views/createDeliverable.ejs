@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Entregable</title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/createDeliverable.css">
+</head>
+
+<body>
+
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/dashboard" class="botones">Regresar al panel del Docente</a>
+            </li>
+            <li class="cerrar-sesion-container">
+                <form action="/logout" method="POST" style="display:inline;">
+                    <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <div class="container">
+        <h2>Crear Nuevo Entregable</h2>
+
+        <% if (error) { %>
+            <script>
+                alert("<%= error %>");
+            </script>
+        <% } %>
+
+        <form action="/deliverables" method="POST" class="form-grid">
+            <div>
+                <label for="project_id">Proyecto:</label>
+                <select name="project_id" required>
+                    <% projects.forEach(project => { %>
+                        <option value="<%= project.id %>"><%= project.project_name %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <div>
+                <label for="name">Nombre del Entregable:</label>
+                <input type="text" name="name" required>
+            </div>
+
+            <div>
+                <label for="description">Descripción:</label>
+                <textarea name="description" required></textarea>
+            </div>
+
+            
+            <div>
+                <label for="due_date">Fecha de Vencimiento:</label>
+                <input type="datetime-local" name="due_date" required>
+            </div>
+
+            <div>
+                <label for="status">Estado:</label>
+                <select name="status" required>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en progreso">En Progreso</option>
+                    <option value="completado">Completado</option>
+                </select>
+            </div>
+
+            <button type="submit">Crear Entregable</button>
+        </form>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="contenedor-pie">
+            <div class="seccion-pie">
+                <h4>Contacto</h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>Síguenos</h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+
+</html>

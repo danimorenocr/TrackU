@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Proyectos</title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/projectList.css">
+</head>
+
+<body>
+
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/projects/create" class="botones">Crear nuevo proyecto</a>
+            </li>
+            <li>
+                <a href="/dashboard" class="botones">Regresar al panel del Administrador</a>
+            </li>
+            <li class="cerrar-sesion-container" <form action="/logout" method="POST" style="display:inline;">
+                <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <div class="container">
+        <h1>Lista de Proyectos</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código del Proyecto</th>
+                    <th>Nombre del Proyecto</th>
+                    <th>Tipo de Proyecto</th>
+                    <th>Docente Asignado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% projects.forEach(project=> { %>
+                    <tr>
+                        <td>
+                            <%= project.project_code %>
+                        </td>
+                        <td>
+                            <%= project.project_name %>
+                        </td>
+                        <td>
+                            <%= project.project_type %>
+                        </td>
+                        <td>
+                            <% if (project.User) { %>
+                                <%= project.User.name %> <!-- Muestra el nombre del docente -->
+                            <% } else { %>
+                                No asignado
+                            <% } %>
+                        </td>
+                        
+                        <td>
+                            <a href="/projects/edit/<%= project.id %>" class="editar">Editar</a>
+                            <form action="/projects/delete/<%= project.id %>" method="POST" style="display:inline;">
+                                <button type="submit">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="contenedor-pie">
+
+            <div class="seccion-pie">
+                <h4>
+                    Contacto
+                </h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>
+                    Siguenos
+                </h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+
+
+</body>
+
+</html>

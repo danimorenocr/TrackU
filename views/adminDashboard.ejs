@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/adminDashboard.css">
+
+</head>
+
+<body>
+
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/users/create" class="botones">Crear nuevo usuario</a>
+            </li>
+            <li>
+                <a href="/projects" class="botones">Administrar proyectos</a>
+            </li>
+            <li class="cerrar-sesion-container"
+                <form action="/logout" method="POST" style="display:inline;">
+                    <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+
+    <!-- Inicio: Contenido -->
+    <section class="fondo-contenido">
+        <div style="width: 65%;">
+            <h1 class="titulo centrar-contenido">Panel de Administrador</h1>
+            <h2 class="centrar-contenido">Bienvenido, <%= user.name %> (Rol: <%= user.role %>)</h2>
+            <p class="centrar-contenido parrafo">Identificación: <%= user.identification %>
+            </p>
+        </div>
+    </section>
+
+    <div class="container">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Identificación</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Usuario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.forEach(u=> { %>
+                    <tr>
+                        <td>
+                            <%= u.id %>
+                        </td>
+                        <td>
+                            <%= u.name %>
+                        </td>
+                        <td>
+                            <%= u.identification %>
+                        </td>
+                        <td>
+                            <%= u.email %>
+                        </td>
+                        <td>
+                            <%= u.role %>
+                        </td>
+                        <td>
+                            <%= u.username %>
+                        </td>
+                        <td>
+                            <a href="/users/edit/<%= u.id %>" class="editar">Editar</a>
+                            <form action="/users/delete/<%= u.id %>" method="POST" style="display:inline;">
+                                <button type="submit"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="contenedor-pie">
+
+            <div class="seccion-pie">
+                <h4>
+                    Contacto
+                </h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>
+                    Siguenos
+                </h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Verificar si hay un mensaje de error en la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+
+        if (error) {
+            alert(error); // Mostrar el mensaje de error como un alert
+        }
+    </script>
+</body>
+
+</html>

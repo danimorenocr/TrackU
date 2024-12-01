@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edición Proyecto</title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/editProfile.css">
+</head>
+
+<body>
+
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/dashboard" class="botones">Regresar al panel del Administrador</a>
+            </li>
+            <li>
+                <a href="/projects" class="botones">Admin proyectos</a>
+            </li>
+            <li class="cerrar-sesion-container" <form action="/logout" method="POST" style="display:inline;">
+                <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <div class="container">
+        <h2>Editar Proyecto</h2>
+        <form action="/projects/update/<%= project.id %>" method="POST" class="form-grid">
+            <div>
+                <label for="project_code">Código del Proyecto:</label>
+                <input type="text" name="project_code" value="<%= project.project_code %>" required>
+            </div>
+
+            <div>
+                <label for="project_name">Nombre del Proyecto:</label>
+                <input type="text" name="project_name" value="<%= project.project_name %>" required>
+            </div>
+
+            <div>
+                <label for="project_type">Tipo de Proyecto:</label>
+                <select name="project_type" required>
+                    <option value="pasantía" <%=project.project_type==='pasantía' ? 'selected' : '' %>>Pasantía</option>
+                    <option value="artículo" <%=project.project_type==='artículo' ? 'selected' : '' %>>Artículo</option>
+                    <option value="trabajo de grado" <%=project.project_type==='trabajo de grado' ? 'selected' : '' %>
+                        >Trabajo de Grado</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="teacher_id">Docente a Cargo:</label>
+                <select name="teacher_id">
+                    <% teachers.forEach(teacher=> { %>
+                        <option value="<%= teacher.id %>" <%=project.teacher_id===teacher.id ? 'selected' : '' %>>
+                            <%= teacher.name %>
+                        </option>
+                        <% }) %>
+                </select>
+            </div>
+
+            <div id="tablesContainer">
+                <div>
+                    <label for="searchInput">Buscar Estudiantes:</label>
+                    <input type="text" id="searchInput" placeholder="Buscar por nombre o identificación"
+                        autocomplete="off">
+                </div>
+
+                <ul id="studentList" style="background: #F8F8F8;">
+                    <!-- Aquí se cargarán las sugerencias de estudiantes -->
+                </ul>
+
+                <!-- Tabla para mostrar el estudiante seleccionado -->
+                <table id="studentTable" class="hidden">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Identificación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+
+                <!-- Tabla para agregar estudiantes seleccionados -->
+                <table id="selectedStudentsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Identificación</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="selectedStudentsBody">
+                        <% studentData.forEach(student => { %>
+                            <tr data-id="<%= student.user_id %>">
+                                <td><%= student.user_id %></td>
+                                <td><%= student.name %></td>
+                                <td><%= student.identification %></td>
+                                <td><button onclick="removeStudent(this)">Eliminar</button></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+            <button type="submit">Actualizar Proyecto</button>
+        </form>
+
+
+        <script>
+            // Verificar si hay un mensaje de error en la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+
+            if (error) {
+                alert(error); // Mostrar el mensaje de error como un alert
+            }
+        </script>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="contenedor-pie">
+
+            <div class="seccion-pie">
+                <h4>
+                    Contacto
+                </h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>
+                    Siguenos
+                </h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsList = document.getElementById('studentList');
+        const studentTable = document.getElementById('studentTable');
+        const tableBody = document.getElementById('tableBody');
+        const selectedStudentsBody = document.getElementById('selectedStudentsBody');
+
+        // Manejar la búsqueda
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.trim();
+
+            if (searchTerm) {
+                fetch(`/search?term=${encodeURIComponent(searchTerm)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestionsList.innerHTML = '';
+                        if (data.length > 0) {
+                            data.forEach(student => {
+                                const listItem = document.createElement('li');
+                                listItem.textContent = `${student.name} - ${student.identification}`;
+                                listItem.addEventListener('click', () => displayStudentInfo(student));
+                                suggestionsList.appendChild(listItem);
+                            });
+                        } else {
+                            suggestionsList.innerHTML = '<li>No se encontraron estudiantes</li>';
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error al buscar estudiantes:', err);
+                        suggestionsList.innerHTML = '<li>Error al buscar estudiantes</li>';
+                    });
+            } else {
+                suggestionsList.innerHTML = '';
+            }
+        });
+
+        // Mostrar información del estudiante seleccionado
+        function displayStudentInfo(student) {
+            suggestionsList.innerHTML = ''; // Limpiar la lista de sugerencias
+            searchInput.value = ''; // Limpiar el input de búsqueda
+
+            studentTable.classList.remove('hidden'); // Mostrar la tabla si estaba oculta
+            tableBody.innerHTML = `
+                <tr>
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.identification}</td>
+                    <td>
+                        <button onclick='addStudent(${JSON.stringify(student)})'>Agregar</button>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // Agregar estudiante a la tabla de seleccionados
+        function addStudent(student) {
+            // Evitar duplicados
+            const existingRows = [...selectedStudentsBody.querySelectorAll('tr')];
+            if (existingRows.some(row => row.dataset.id === String(student.id))) {
+                alert('El estudiante ya ha sido agregado');
+                return;
+            }
+
+            // Crear una nueva fila
+            const row = document.createElement('tr');
+            row.dataset.id = student.id; // Agregar data-id para identificar duplicados
+            row.innerHTML = `
+                <td>${student.id}</td>
+                <td>${student.name}</td>
+                <td>${student.identification}</td>
+                <td>
+                    <button onclick="removeStudent(this)">Eliminar</button>
+                </td>
+            `;
+            selectedStudentsBody.appendChild(row);
+
+            // Limpiar la tabla temporal y ocultarla
+            tableBody.innerHTML = '';
+            studentTable.classList.add('hidden');
+        }
+
+    
+        const form = document.querySelector('form'); // Selecciona el formulario
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            console.log('Evento submit capturado'); // Mensaje de prueba
+
+            // Recorre la tabla de estudiantes seleccionados y obtiene los IDs
+            const selectedRows = document.querySelectorAll('#selectedStudentsBody tr');
+            const selectedIds = Array.from(selectedRows).map(row => row.dataset.id);
+
+            // Validaciones
+            if (selectedIds.length === 0) {
+                alert('Debes seleccionar al menos un estudiante antes de crear el proyecto.');
+                return; // No envía el formulario si no hay estudiantes seleccionados
+            }
+
+            // Muestra los IDs de los estudiantes seleccionados en un cuadro de alerta
+            alert('IDs de estudiantes seleccionados: ' + selectedIds.join(', '));
+
+            // Agrega los IDs seleccionados como un campo oculto en el formulario
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'selected_students';
+            hiddenInput.value = JSON.stringify(selectedIds); // Convierte el array a un string JSON
+            form.appendChild(hiddenInput);
+
+            // Usar setTimeout para diferir el envío del formulario
+            setTimeout(() => {
+                // Después de 500 ms, enviamos el formulario
+                console.log('Formulario enviado');
+                form.submit(); // Enviar el formulario
+            }, 500); // Retarda el envío 500 ms para dar tiempo a otras operaciones
+        });
+
+
+        // Función para eliminar un estudiante
+        function removeStudent(button) {
+            const row = button.closest('tr'); // Encuentra la fila que contiene el botón
+            row.remove(); // Elimina la fila de la tabla
+        }
+
+
+    </script>
+</body>
+
+</html>

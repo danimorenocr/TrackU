@@ -1,0 +1,116 @@
+<!-- views/userDashboard.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard <%= user.name %>
+    </title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/userDashboard.css">
+</head>
+
+<body>
+
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/profile/edit" class="botones">Editar mi información</a>
+            </li>
+            <li>
+                <a href="/filesTeacher" class="botones">Calificar</a>
+            </li>
+            <li class="cerrar-sesion-container">
+                <form action="/logout" method="POST" style="display:inline;">
+                    <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <!-- Inicio: Contenido -->
+    <section class="fondo-contenido">
+        <div style="width: 65%;">
+            <h1 class="titulo centrar-contenido">Panel del Usuario</h1>
+            <h2 class="centrar-contenido welcome">Bienvenido, <%= user.name %> (Rol: <%= user.role %>)</h2>
+            <p class="centrar-contenido parrafo">Identificación: <%= user.identification %>
+            </p>
+        </div>
+    </section>
+
+    <div class="container">
+        <form action="/deliverables/create" method="GET" style="display:inline;">
+            <button type="submit">Crear Entrega</button>
+        </form>
+        <form action="/deliverables" method="GET" style="display:inline;">
+            <button type="submit">Ver Entregas</button>
+        </form>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Código de Proyecto</th>
+                    <th>Nombre del Proyecto</th>
+                    <th>Tipo de Proyecto</th>
+                    <th>Estudiante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (projects && projects.length > 0) { %>
+                    <% projects.forEach(function(project) { %>
+                        <tr>
+                            <td><%= project.project_code %></td>
+                            <td><%= project.project_name %></td>
+                            <td><%= project.project_type %></td>
+                            <td>
+                                <!-- Botón para ver estudiantes -->
+                                <form  action="/teacher/projet_student/<%= project.id %>" method="GET" style="display:inline;">
+                                    <button type="submit">Ver Estudiantes</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3">No tienes proyectos asignados.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>       
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="contenedor-pie">
+
+            <div class="seccion-pie">
+                <h4>
+                    Contacto
+                </h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>
+                    Siguenos
+                </h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+</body>
+
+</html>

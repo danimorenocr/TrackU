@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Archivos</title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/projectList.css">
+</head>
+
+<body>
+
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/deliverables/create" class="botones">Crear nuevo entrega</a>
+            </li>
+            <li>
+                <a href="/deliverables" class="botones">Ver entregas</a>
+            </li>
+            <li>
+                <a href="/dashboard" class="botones">Regresar al panel del Docente</a>
+            </li>
+            <li class="cerrar-sesion-container" <form action="/logout" method="POST" style="display:inline;">
+                <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <div class="container">
+        <!-- Sección que muestra los archivos que han sido cargados. -->
+        <h2>Calificaciones</h2>
+
+        <!-- Tabla que presenta los archivos cargados con columnas para el nombre, autor, fecha y acciones. -->
+        <table id="fileTable">
+            <thead>
+                <tr>
+                    <th>Entrega</th>
+                    <th>Nombre de Archivo</th>
+                    <th>Autor</th>
+                    <th>Estado</th>
+                    <th>Calificación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% files.forEach(file=> { %>
+                    <tr>
+                        <td>
+                            <%= file.Deliverable ? file.Deliverable.dataValues.name : 'No Disponible' %>
+                        </td>
+                        <td>
+                            <%= file.filename %>
+                        </td>
+                        <td>
+                            <%= file.autor %>
+                        </td>
+                        <td>
+                            <!-- Combo para cambiar el estado -->
+                            <select onchange="updateStatus('<%= file.id %>', this.value)">
+                                <option value="pendiente" <%=file.status==='pendiente' ? 'selected' : '' %>>Pendiente
+                                </option>
+                                <option value="entregado" <%=file.status==='entregado' ? 'selected' : '' %>>Entregado
+                                </option>
+                                <option value="revisado" <%=file.status==='revisado' ? 'selected' : '' %>>Revisado
+                                </option>
+                            </select>
+
+                        </td>
+                        <td>
+                            <!-- Input para el score que actualiza la base de datos -->
+                            <input type="number" value="<%= file.score %>"
+                                onchange="updateScore('<%= file.id %>', this.value)"
+                                onkeydown="handleEnter(event, '<%= file.id %>', this.value)" min="0" step="0.1" />
+                        </td>
+                        <td>
+                            <!-- Botón para descargar el archivo -->
+                            <a href="/download/<%= file.filename %>">
+                                <button type="button">Descargar</button>
+                            </a>
+                        </td>
+                        
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+
+
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="contenedor-pie">
+
+            <div class="seccion-pie">
+                <h4>
+                    Contacto
+                </h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>
+                    Siguenos
+                </h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        async function updateStatus(fileId, newStatus) {
+            console.log("Nuevo estado:", newStatus);  // Verifica que el nuevo estado es correcto
+
+            try {
+                const response = await fetch(`/filesTeacher/${fileId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',  // Este encabezado es importante
+                    },
+                    body: JSON.stringify({ status: newStatus })  // El cuerpo debe ser un JSON con el campo 'status'
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    alert('Error al actualizar el estado: ' + (data.message || 'Respuesta inesperada'));
+                    return;
+                }
+
+                alert('Estado actualizado correctamente');
+            } catch (error) {
+                console.error('Error al hacer la solicitud:', error);
+                alert('Hubo un error al actualizar el estado');
+            }
+        }
+
+
+        function handleEnter(event, fileId, currentValue) {
+            if (event.key === "Enter") {
+                // Obtener el valor actualizado en caso de que haya cambiado antes de presionar Enter
+                const newScore = event.target.value;
+                updateScore(fileId, newScore);  // Llama a la función para actualizar el puntaje
+            }
+        }
+
+        // Función para actualizar el puntaje
+        function updateScore(fileId, newScore) {
+            // Usamos fetch para enviar la actualización al servidor
+            fetch(`/updateScore/${fileId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ score: newScore }),  // Enviamos el puntaje nuevo
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Score actualizado exitosamente');
+                    } else {
+                        console.log('Error al actualizar el score');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Archivos de la USTA</title>
+    <link rel="icon" href="logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/createProject.css">
+</head>
+
+<body>
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/dashboard" class="botones">Regresar al panel del Estudiante</a>
+            </li>
+            <li>
+                <a href="/files" class="botones">Lista de Entregas</a>
+            </li>
+            <li class="cerrar-sesion-container">
+                <form action="/logout" method="POST" style="display:inline;">
+                    <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <div class="container">
+        <h1 class="h1">
+            Edita tu entrega
+        </h1>
+
+        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="/editFile/<%= file.id %>">
+            <div class="file-input-container">
+                <label for="fileUpload" class="file-label">Seleccionar Archivo:</label>
+                <input type="file" name="file" id="fileUpload">
+                <div id="fileSelected">
+                    <%= file.filename ? file.filename : 'No se eligió ningún archivo' %>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <label for="autor">Autor:</label>
+                <input class="margin" type="text" id="autor" name="autor" placeholder="Escriba el nombre del autor"
+                    value="<%= file.autor %>" required>
+            </div>
+
+            <!-- Campo oculto para enviar el ID del entregable -->
+            <input type="hidden" name="deliverable_id" value="<%= deliverable_id %>">
+
+            <button type="submit">Actualizar Archivo</button>
+        </form>
+
+        <script>
+            // Actualiza el texto cuando se selecciona un archivo
+            document.getElementById('fileUpload').addEventListener('change', function () {
+                const fileName = this.files.length > 0 ? this.files[0].name : 'No se eligió ningún archivo';
+                document.getElementById('fileSelected').textContent = fileName;
+            });
+        </script>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="contenedor-pie">
+            <div class="seccion-pie">
+                <h4>Contacto</h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>Síguenos</h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+</body>
+
+</html>

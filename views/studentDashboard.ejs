@@ -1,0 +1,146 @@
+<!-- views/userDashboard.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard <%= user.name %>
+    </title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/userDashboard.css">
+</head>
+
+<body>
+
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/profile/edit" class="botones">Editar mi información</a>
+            </li>
+            <li>
+                <a href="/fileScore" class="botones">Ver Calificaciones</a>
+            </li>
+            <li>
+                <a href="/files" class="botones">Editar Archivo</a>
+            </li>
+            <li class="cerrar-sesion-container" <form action="/logout" method="POST" style="display:inline;">
+                <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <!-- Inicio: Contenido -->
+    <section class="fondo-contenido">
+        <div style="width: 65%;">
+            <h1 class="titulo centrar-contenido">Panel del Estudiante</h1>
+            <h2 class="centrar-contenido welcome">Bienvenido, <%= user.name %> (Rol: <%= user.role %>)</h2>
+            <p class="centrar-contenido parrafo">Identificación: <%= user.identification %>
+            </p>
+        </div>
+    </section>
+
+    <div class="container">
+
+        <div class="project-details">
+            <!-- Títulos principales -->
+            <h1>Proyecto</h1>
+            <h2 class="h2">Nombre del Proyecto: <%= projectUsers[0].Project.project_name || "Sin nombre" %>
+            </h2>
+            <h3> Código de Proyecto: <%= projectUsers[0].Project.project_code || "Sin código" %>
+            </h3>
+            <h4 class="h4">Tipo: <%= projectUsers[0].Project.project_type || "Sin tipo" %>
+            </h4>
+            <h4 class="h4">Docente: <%= projectUsers[0].Project.teacherName || "Sin asignar" %>
+            </h4>
+
+            <!-- Tabla de entregas -->
+            <h1>Entregas</h1>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (projectUsers && projectUsers.length> 0) { %>
+                        <% projectUsers.forEach(function(projectUser) { %>
+                            <% if (projectUser.Project.Deliverables && projectUser.Project.Deliverables.length> 0) { %>
+                                <% projectUser.Project.Deliverables.forEach(function(entrega) { %>
+                                    <tr>
+                                        <td>
+                                            <%= entrega.name || "Sin nombre" %>
+                                        </td>
+                                        <td>
+                                            <%= entrega.description || "Sin descripción" %>
+                                        </td>
+                                        <td>
+                                            <%= entrega.due_date || "Sin fecha" %>
+                                        </td>
+                                        <td>
+                                            <%= entrega.status || "Sin estado" %>
+                                        </td>
+                                        <td>
+                                            <form action="/files/<%= entrega.id %>" method="GET"
+                                                style="display:inline;">
+                                                <button type="submit">Subir Entregas</button>
+                                            </form>
+
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="5" style="text-align: center;">No hay entregas disponibles.
+                                                </td>
+                                            </tr>
+                                            <% } %>
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="5" style="text-align: center;">No tienes
+                                                                proyectos asignados.</td>
+                                                        </tr>
+                                                        <% } %>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="contenedor-pie">
+
+            <div class="seccion-pie">
+                <h4>
+                    Contacto
+                </h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>
+                    Siguenos
+                </h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/userDashboard.css">
+</head>
+
+<body>
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/dashboard" class="botones">Regresar al panel del Docente</a>
+            </li>
+            <li class="cerrar-sesion-container">
+                <form action="/logout" method="POST" style="display:inline;">
+                    <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Estudiante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (projectStudents && projectStudents.length > 0) { %>
+                    <% projectStudents.forEach(function(student) { %>
+                        <tr>
+                            <td><%= student.User.name %></td> <!-- Ajuste: acceder al nombre desde student.User.name -->
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td>No hay estudiantes asociados a este proyecto.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="contenedor-pie">
+            <div class="seccion-pie">
+                <h4>Contacto</h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>Síguenos</h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+</body>
+
+</html>

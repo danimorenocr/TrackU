@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Definición del conjunto de caracteres a utilizar (UTF-8) para asegurar una correcta visualización de caracteres especiales -->
+    <meta charset="UTF-8">
+    <!-- Configuración para que el contenido sea adaptable a distintos tamaños de pantalla (dispositivos móviles y escritorio) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título de la página que se muestra en la pestaña del navegador -->
+    <title>Gestor CSV</title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <!-- Vinculación con una hoja de estilos CSS externa -->
+    <link rel="stylesheet" href="/css/csv.css">
+</head>
+
+<body>
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/dashboard" class="botones">Regresar al panel del Administrador</a>
+            </li>
+            <li class="cerrar-sesion-container" <form action="/logout" method="POST" style="display:inline;">
+                <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <!-- Contenedor principal de la página -->
+    <div class="container">
+
+        <!-- Formulario para cargar un archivo CSV -->
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+            <!-- Campo de entrada para seleccionar archivos de tipo CSV, es obligatorio -->
+            <input type="file" name="csvfile" id="csvfile" accept=".csv" required>
+            <!-- Botón para enviar el formulario -->
+            <button type="submit">Subir y procesar</button>
+        </form>
+    </div>
+
+     <!-- FOOTER -->
+     <footer>
+        <div class="contenedor-pie">
+
+            <div class="seccion-pie">
+                <h4>
+                    Contacto
+                </h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>
+                    Siguenos
+                </h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Bloque de script JavaScript -->
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
+            const fileInput = document.getElementById('csvfile');
+            const filePath = fileInput.value;
+
+            if (filePath.substring(filePath.lastIndexOf('.') + 1) !== 'csv') {
+                event.preventDefault();
+                alert('Solo se permiten archivos CSV.');
+                return false;
+            }
+
+            // Usar AJAX para enviar el formulario y manejar la respuesta
+            event.preventDefault(); // Prevenir el envío normal del formulario
+
+            const formData = new FormData(this); // Crear un nuevo FormData con los datos del formulario
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json()) // Parsear la respuesta como JSON
+                .then(data => {
+                    // Mostrar el resumen en un alert
+                    alert(`Proceso completo. Personas procesadas: ${data.processedCount}, Duplicados de identificación: ${data.duplicateCount}, Duplicados de nombre de usuario: ${data.duplicateUsernameCount}, Correos inválidos: ${data.invalidEmails}, Roles inválidos: ${data.invalidRoles}, Campos vacíos: ${data.invalidFields}`);
+                })
+                .catch(error => {
+                    console.error('Error:', error); // Mostrar error en la consola
+                    alert('Hubo un problema procesando el archivo.');
+                });
+        });
+    </script>
+
+</body>
+
+</html>

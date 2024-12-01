@@ -1,0 +1,6 @@
+name,identification,password,email,role,username
+Juan s,123456789,$2b$10$abc123,juan.perez@usantoto.edu.co,admin,juanp
+Ana h,987654321,$2b$10$def456,ana.lopez@usantoto.edu.co,docente,anal
+Carlos g,456789123,$2b$10$ghi789,carlos.gomez@usantoto.edu.co,estudiante,carlosg
+aa aaa,789123456,$2b$10$jkl012,lucia.martinez@usantoto.edu.co,estudiante,luciam
+Pedro Castillo,321654987,$2b$10$mno345,pedro.castillo@usantoto.edu.co,docente,pedroc

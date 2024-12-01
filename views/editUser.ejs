@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edición Usuario</title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="/css/editProfile.css">
+</head>
+
+<body>
+
+    <!-- Inicio: Barra de navegación -->
+    <nav>
+        <div>
+            <a href="#">
+                <img src="/img/TrackU.png" alt="logo.png" class="imagen-logo" />
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/dashboard" class="botones">Regresar al panel del Administrador</a>
+            </li>
+            <li class="cerrar-sesion-container" <form action="/logout" method="POST" style="display:inline;">
+                <a href="/logout" class="cerrar-sesion">Cerrar Sesión</a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin: Barra de navegación -->
+
+    <div class="container">
+        <h2>Editar Usuario</h2>
+
+        <form action="/users/update/<%= user.id %>" method="POST" class="form-grid">
+            <div>
+                <label for="name">Nombre:</label>
+                <input type="text" id="name" name="name" value="<%= user.name %>" required>
+            </div>
+        
+            <div>
+                <label for="identification">Identificación:</label>
+                <input type="text" id="identification" name="identification" value="<%= user.identification %>" required>
+            </div>
+        
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="<%= user.email %>" required>
+            </div>
+        
+            <div>
+                <label for="role">Rol:</label>
+                <select id="role" name="role" required>
+                    <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                    <option value="docente" <%= user.role === 'docente' ? 'selected' : '' %>>Docente</option>
+                    <option value="estudiante" <%= user.role === 'estudiante' ? 'selected' : '' %>>Estudiante</option>
+                </select>
+            </div>
+        
+            <div>
+                <label for="username">Nombre de usuario:</label>
+                <input type="text" id="username" name="username" value="<%= user.username %>" required>
+            </div>
+        
+            <div>
+                <label for="password">Contraseña (dejar en blanco para no cambiar):</label>
+                <input type="password" id="password" name="password">
+            </div>
+        
+            <button type="submit">Actualizar Usuario</button>
+        </form>
+        
+
+        <script>
+            // Verificar si hay un mensaje de error o éxito en la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            const success = urlParams.get('success');
+
+            if (error) {
+                alert(error); // Mostrar el mensaje de error como un alert
+            }
+
+            if (success) {
+                alert(success); // Mostrar el mensaje de éxito como un alert
+            }
+        </script>
+    </div>
+
+     <!-- FOOTER -->
+     <footer>
+        <div class="contenedor-pie">
+
+            <div class="seccion-pie">
+                <h4>
+                    Contacto
+                </h4>
+                <p class="seccion-pie">Teléfono: 456789</p>
+                <p class="seccion-pie">Dirección: Avenida Universitaria</p>
+            </div>
+            <div class="seccion-pie">
+                <h4>
+                    Siguenos
+                </h4>
+                <span><a href="https://www.facebook.com/?locale=es_LA" target="_blank">Facebook</a></span>
+                <span><a href="https://www.instagram.com/" target="_blank">Instagram</a></span>
+            </div>
+        </div>
+        <p style="font-family: fedoca;">© 2024 [TrackU]. Todos los derechos reservados.</p>
+    </footer>
+</body>
+
+</html>
