@@ -6,18 +6,21 @@ let sequelize;
 
 // Verificar si hay una URL completa de la base de datos disponible
 if (process.env.DATABASE_URL) {
+    console.log('Usando URL de conexión para la base de datos');
     // Usar la URL de conexión completa
     sequelize = new Sequelize(process.env.DATABASE_URL, {
         dialect: 'mysql',
+        dialectModule: require('mysql2'), // Forzar el uso de mysql2
         dialectOptions: {
             ssl: {
                 require: true,
-                rejectUnauthorized: false // Importante para algunas configuraciones de Railway
+                rejectUnauthorized: false // Importante para algunas configuraciones
             }
         },
         logging: false
     });
 } else {
+    console.log('Usando parámetros individuales para la base de datos');
     // Usar parámetros individuales como fallback
     sequelize = new Sequelize(
         process.env.DB_NAME || 'proyecto_pasantia',
@@ -27,6 +30,13 @@ if (process.env.DATABASE_URL) {
             host: process.env.DB_HOST || 'localhost',
             port: process.env.DB_PORT || 3306,
             dialect: 'mysql',
+            dialectModule: require('mysql2'), // Forzar el uso de mysql2
+            dialectOptions: {
+                ssl: {
+                    require: true,
+                    rejectUnauthorized: false
+                }
+            },
             logging: false
         }
     );
