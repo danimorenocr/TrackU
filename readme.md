@@ -155,8 +155,19 @@ INSERT INTO users (
 ) VALUES (
     'Administrador',
     '123456789',
-    '$$2a$10$gW9LGQcRKE8ZR8tiZ7VumecDzDwN/skV6fhIZvboHXEJ6XsZpM7qG',
+    '$$2a$10$gW9LGQcRKE8ZR8tiZ7VumecDzDwN/skV6fhIZvboHXEJ6XsZpM7qG', ---12345678
     'admin@gmail.com',
     'admin',
     'admin'
 );
+
+
+# .env
+
+# Variables de entorno para la conexión a Railway
+DB_HOST=******
+DB_USER=****
+DB_PASSWORD=****
+DB_NAME=******
+DB_PORT=***
+DATABASE_URL=****
