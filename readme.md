@@ -144,3 +144,19 @@ CREATE TABLE project_users (
     FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Insertar un usuario de ejemplo en la tabla users
+INSERT INTO users (
+    name,
+    identification,
+    password,
+    email,
+    role,
+    username
+) VALUES (
+    'Administrador',
+    '123456789',
+    '$$2a$10$gW9LGQcRKE8ZR8tiZ7VumecDzDwN/skV6fhIZvboHXEJ6XsZpM7qG',
+    'admin@gmail.com',
+    'admin',
+    'admin'
+);

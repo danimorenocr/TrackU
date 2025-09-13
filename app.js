@@ -1,4 +1,5 @@
 // app.js
+require('dotenv').config(); // Cargar variables de entorno
 
 const express = require('express');
 const bcrypt = require('bcryptjs');
