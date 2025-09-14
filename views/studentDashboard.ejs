@@ -53,14 +53,18 @@
         <div class="project-details">
             <!-- Títulos principales -->
             <h1>Proyecto</h1>
-            <h2 class="h2">Nombre del Proyecto: <%= projectUsers[0].Project.project_name || "Sin nombre" %>
-            </h2>
-            <h3> Código de Proyecto: <%= projectUsers[0].Project.project_code || "Sin código" %>
-            </h3>
-            <h4 class="h4">Tipo: <%= projectUsers[0].Project.project_type || "Sin tipo" %>
-            </h4>
-            <h4 class="h4">Docente: <%= projectUsers[0].Project.teacherName || "Sin asignar" %>
-            </h4>
+            <% if (projectUsers && projectUsers.length > 0) { %>
+                <h2 class="h2">Nombre del Proyecto: <%= projectUsers[0].Project.project_name || "Sin nombre" %>
+                </h2>
+                <h3> Código de Proyecto: <%= projectUsers[0].Project.project_code || "Sin código" %>
+                </h3>
+                <h4 class="h4">Tipo: <%= projectUsers[0].Project.project_type || "Sin tipo" %>
+                </h4>
+                <h4 class="h4">Docente: <%= projectUsers[0].Project.teacherName || "Sin asignar" %>
+                </h4>
+            <% } else { %>
+                <h2 class="h2">No tienes proyectos asignados actualmente</h2>
+            <% } %>
 
             <!-- Tabla de entregas -->
             <h1>Entregas</h1>
